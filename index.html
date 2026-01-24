@@ -35,12 +35,13 @@
           <i class="bi bi-search search-icon"></i>
 
           <input
-            type="text"
-            id="query"
-            placeholder="Type your search..."
-            oninput="toggleClear()"
-            required
-          >
+  type="text"
+  id="query"
+  placeholder="Type or paste your search..."
+  oninput="toggleClear()"
+  onpaste="pasteRedirect(event)"
+  required
+>
 
           <button
             type="button"
@@ -76,5 +77,22 @@ if ("serviceWorker" in navigator) {
 }
 </script>
 
+  <script>
+function pasteRedirect(e) {
+  // paste hone ke baad value milti hai, isliye thoda delay
+  setTimeout(() => {
+    const query = document.getElementById("query").value.trim();
+
+    if (query.length > 0) {
+      // direct search function call
+      searchYT(new Event("submit"));
+
+      // agar kisi page pe redirect chahte ho to 👇
+      // window.location.href = "results.html?q=" + encodeURIComponent(query);
+    }
+  }, 50);
+}
+  </script>
+  
 </body>
 </html>
