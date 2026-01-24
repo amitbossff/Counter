@@ -7,7 +7,7 @@ function searchYT(e) {
   window.location.href =
     "https://www.youtube.com/results?search_query=" +
     encodeURIComponent(q) +
-    "&sp=EgQIARAB";
+    "sp=EgIIAg%3D%3D";
 }
 
 function clearInput() {
