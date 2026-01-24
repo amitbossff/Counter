@@ -1,24 +1,44 @@
-function searchYT(e) {
-  e.preventDefault();
 
-  const q = document.getElementById("query").value.trim();
-  if (!q) return;
+const searchBox = document.getElementById("searchBox");
 
-  window.location.href =
-    "https://www.youtube.com/results?search_query=" +
-    encodeURIComponent(q) +
-    "sp=EgIIAg%3D%3D";
-}
+searchBox.addEventListener("input", () => {
+  const value = searchBox.value.trim();
+  if (!value) return;
 
-function clearInput() {
-  const input = document.getElementById("query");
-  input.value = "";
-  input.focus();
-  toggleClear();
-}
+  const query = encodeURIComponent(value);
 
-function toggleClear() {
-  const input = document.getElementById("query");
-  const btn = document.getElementById("clearBtn");
-  btn.style.display = input.value ? "flex" : "none";
+  const lastHourFilter = "EgIIAg%3D%3D";
+
+  const url =
+    `https://www.youtube.com/results?search_query=${query}&sp=${lastHourFilter}`;
+
+  window.open(url, "_blank");
+
+  // Clear input
+  searchBox.value = "";
+});
+
+
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./service-worker.js').then(registration => {
+    registration.addEventListener('updatefound', () => {
+      const newWorker = registration.installing;
+
+      newWorker.addEventListener('statechange', () => {
+        if (newWorker.state === 'installed' &&
+            navigator.serviceWorker.controller) {
+          if (confirm("A new version is available. Update now?")) {
+            newWorker.postMessage('skipWaiting');
+            window.location.reload();
+          }
+        }
+      });
+    });
+  });
+
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.getRegistration().then(reg => {
+      if (reg) reg.update();
+    });
+  });
 }
