@@ -1,44 +1,37 @@
-
 const searchBox = document.getElementById("searchBox");
+const clearBtn = document.getElementById("clearBtn");
+const searchBtn = document.getElementById("searchBtn");
+
+let lastValue = "";
+
+function doSearch() {
+  const value = searchBox.value.trim();
+  if (!value || value === lastValue) return;
+
+  lastValue = value;
+  const query = encodeURIComponent(value);
+  const lastHourFilter = "CAISAhAB";
+
+  window.location.href =
+  `https://www.youtube.com/results?search_query=${query}&sp=${lastHourFilter}`;
+
+  setTimeout(() => {
+    searchBox.value = "";
+    clearBtn.style.display = "none";
+    lastValue = "";
+  }, 300);
+}
 
 searchBox.addEventListener("input", () => {
-  const value = searchBox.value.trim();
-  if (!value) return;
-
-  const query = encodeURIComponent(value);
-
-  const lastHourFilter = "EgIIAg%3D%3D";
-
-  const url =
-    `https://www.youtube.com/results?search_query=${query}&sp=${lastHourFilter}`;
-
-  window.open(url, "_blank");
-
-  // Clear input
-  searchBox.value = "";
+  clearBtn.style.display = searchBox.value ? "flex" : "none";
+  doSearch();
 });
 
+searchBtn.addEventListener("click", doSearch);
 
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js').then(registration => {
-    registration.addEventListener('updatefound', () => {
-      const newWorker = registration.installing;
-
-      newWorker.addEventListener('statechange', () => {
-        if (newWorker.state === 'installed' &&
-            navigator.serviceWorker.controller) {
-          if (confirm("A new version is available. Update now?")) {
-            newWorker.postMessage('skipWaiting');
-            window.location.reload();
-          }
-        }
-      });
-    });
-  });
-
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.getRegistration().then(reg => {
-      if (reg) reg.update();
-    });
-  });
-}
+clearBtn.addEventListener("click", () => {
+  searchBox.value = "";
+  clearBtn.style.display = "none";
+  lastValue = "";
+  searchBox.focus();
+});
