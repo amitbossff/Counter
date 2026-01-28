@@ -12,8 +12,10 @@ function doSearch() {
   const query = encodeURIComponent(value);
   const lastHourFilter = "CAISAhAB";
 
-  window.location.href =
-  `https://www.youtube.com/results?search_query=${query}&sp=${lastHourFilter}`;
+  window.open(
+  `https://www.youtube.com/results?search_query=${query}&sp=${lastHourFilter}`,
+  "_blank"
+);
 
   setTimeout(() => {
     searchBox.value = "";
